@@ -32,10 +32,18 @@ RSpec.describe "Robots", type: :request do
 
     it "expects to return error if name already taken" do
       post '/robots', params: {robot: {robot_type: "hackerobot", name: "hackerobot5"}}
-      #FactoryBot.create(:robot, robot_type: "hackerobot", name: "hackerobot4")
+      #FactoryBot.create(:robot, robot_type: "hackerobot", name: "hackerobot5")
       post '/robots', params: {robot: {robot_type: "tacticrobot", name: "hackerobot5"}}
       puts response.body
       expect(JSON.parse(response.body)["errors"][0]).to eq "Name has already been taken"
+    end
+  end
+
+  describe "#update" do
+    it "updates robot name" do
+      robot = FactoryBot.create(:robot, name: "hackerobot1")
+      patch "/robots/#{robot.id}", params: {robot: {robot_type: "hackerobot", name: "Updated name"}}
+      expect(robot.reload.name).to eq "Updated name"
     end
   end
 end
