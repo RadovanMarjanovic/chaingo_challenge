@@ -11,6 +11,11 @@ class RobotsController < ApplicationController
     json_response(@robot,:ok)
   end
 
+  def destroy
+    @robot.destroy
+    head :no_content
+  end
+
   private
 
   def robot_params

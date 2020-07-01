@@ -34,7 +34,6 @@ RSpec.describe "Robots", type: :request do
       post '/robots', params: {robot: {robot_type: "hackerobot", name: "hackerobot5"}}
       #FactoryBot.create(:robot, robot_type: "hackerobot", name: "hackerobot5")
       post '/robots', params: {robot: {robot_type: "tacticrobot", name: "hackerobot5"}}
-      puts response.body
       expect(JSON.parse(response.body)["errors"][0]).to eq "Name has already been taken"
     end
   end
@@ -44,6 +43,19 @@ RSpec.describe "Robots", type: :request do
       robot = FactoryBot.create(:robot, name: "hackerobot1")
       patch "/robots/#{robot.id}", params: {robot: {robot_type: "hackerobot", name: "Updated name"}}
       expect(robot.reload.name).to eq "Updated name"
+    end
+  end
+
+  describe "#destroy" do
+    it "destroys a robot" do
+      robot = FactoryBot.create(:robot)
+      expect{delete "/robots/#{robot.id}"}.to change { Robot.count }.by(-1)
+    end
+
+    it "destroys armor when destroying the robot it belongs to" do
+      robot = FactoryBot.create(:robot)
+      armor = FactoryBot.create(:armor, robot: robot)
+      expect{delete "/robots/#{robot.id}"}.to change { Armor.count }.by(-1)
     end
   end
 end
