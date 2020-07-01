@@ -1,4 +1,6 @@
 class Robot < ApplicationRecord
+  include SerialsUuidConcern
+
   has_many :armors, dependent: :destroy
   has_many :weapons, dependent: :destroy
 

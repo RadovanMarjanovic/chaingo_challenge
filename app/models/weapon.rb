@@ -1,4 +1,6 @@
 class Weapon < ApplicationRecord
+  include SerialsUuidConcern
+
   belongs_to :robot
 
   validates :weapon_type, presence: true, inclusion: { in: %w(laser code acid map) }
