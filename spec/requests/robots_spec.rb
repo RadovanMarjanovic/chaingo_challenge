@@ -38,6 +38,21 @@ RSpec.describe "Robots", type: :request do
     end
   end
 
+  describe "#index" do
+    it "return an array of robots with type hackerobot" do
+      2.times { FactoryBot.create(:robot, robot_type: "hackerobot") }
+      post '/robots', params: {robot: {robot_type: "tacticrobot", name: "hakerobot7"}}
+      get '/robots?query=hackerobot'
+      expect(JSON.parse(response.body).length).to eq(2)
+    end
+
+    it "return an array of all robots if no search param is given" do
+      4.times { FactoryBot.create(:robot) }
+      get '/robots'
+      expect(JSON.parse(response.body).length).to eq(4)
+    end
+  end
+
   describe "#update" do
     it "updates robot name" do
       robot = FactoryBot.create(:robot, name: "hackerobot1")
